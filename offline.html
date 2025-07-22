@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | GoDix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex items-center justify-center p-4 text-gray-100">
+    <div class="max-w-md w-full mx-auto text-center">
+        <!-- Animated offline icon -->
+        <div class="mx-auto w-24 h-24 mb-6 relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full opacity-20 animate-pulse"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full p-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+            </svg>
+        </div>
+
+        <!-- Main content -->
+        <h1 class="text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+            You're Offline
+        </h1>
+        <p class="text-gray-300 mb-6">
+            Don't worry! You can still access previously viewed content. 
+            A connection will be restored automatically when available.
+        </p>
+
+        <!-- Action buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <button onclick="window.location.reload()" 
+                    class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-lg font-medium text-white shadow-lg transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                Retry Connection
+            </button>
+            <button onclick="history.back()" 
+                    class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium text-white transition-all focus:outline-none focus:ring-2 focus:ring-gray-500">
+                Go Back
+            </button>
+        </div>
+
+        <!-- Connection status indicator -->
+        <div class="mt-8 pt-6 border-t border-gray-700">
+            <div class="flex items-center justify-center space-x-2">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <span class="text-sm text-gray-400">No internet connection detected</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service worker status -->
+    <div class="absolute bottom-4 left-0 right-0 text-center">
+        <p class="text-xs text-gray-500">GoDix is working offline</p>
+    </div>
+
+    <script>
+        // Check connection status periodically
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

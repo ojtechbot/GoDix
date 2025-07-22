@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-1036234752964441">
+    <title>GWatch - Watch & Earn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Monnify SDK -->
+    <script src="https://sdk.monnify.com/plugin/monnify.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            margin-bottom: 30px;
+        }
+    
+        .profile-pic {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .chatbot-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .chatbot-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+        .chatbot-header {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            font-weight: bold;
+        }
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .chatbot-input {
+            padding: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 18px;
+        }
+        .user-message {
+            background: #3b82f6;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .bot-message {
+            background: #f3f4f6;
+            color: #111827;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        /* Toast notification */
+        .toast-success {
+            background: #10b981 !important;
+        }
+        .toast-error {
+            background: #ef4444 !important;
+        }
+        .toast-info {
+            background: #3b82f6 !important;
+        }
+        /* Offline Modal */
+        .offline-modal {
+            position: fixed;
+            bottom: -72%;
+            left: 0;
+            right: 0;
+            height: 72%;
+            background: white;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+            transition: transform 0.4s ease-out;
+        }
+        .offline-modal.show {
+            transform: translateY(-100%);
+        }
+        .offline-modal-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .offline-modal-content {
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-backdrop.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <!-- Wallet Logo (Your Design) -->
+                        <div class="relative w-12 h-12 group">
+                          <!-- Metallic Card Slot -->
+                          <div class="absolute inset-0 flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" class="w-10 h-10">
+                              <!-- Wallet Base (Leather Texture) -->
+                              <path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" 
+                                    fill="#201e2b" class="group-hover:fill-[#282534] transition-colors"/>
+                              
+                              <!-- Card Slot (Metallic) -->
+                              <path d="M4 9h16v1H4z" fill="url(#metalGradient)"/>
+                              
+                              <!-- Credit Card -->
+                              <rect x="6" y="10" width="12" height="8" rx="1" fill="#1a3a8f" class="group-hover:fill-[#2148b5] transition-colors"/>
+                              <rect x="8" y="12" width="3" height="2" rx="0.5" fill="#f5cb4a"/>
+                              <rect x="8" y="15" width="6" height="1" fill="#ffffff80"/>
+                              
+                              <!-- Stitching Details -->
+                              <path d="M4 7h16M4 17h16" stroke="#ffffff20" stroke-width="0.5" stroke-dasharray="1,1"/>
+                            </svg>
+                          </div>
+
+                          <!-- 6D Holographic Effect -->
+                          <div class="absolute inset-0 rounded-full border-2 border-cyan-400/20 group-hover:border-cyan-400/40 transition-all -z-10"></div>
+
+                          <!-- Dynamic Lighting -->
+                          <div class="absolute inset-0 rounded-full pointer-events-none overflow-hidden">
+                            <div class="absolute -top-3 -right-3 w-6 h-6 bg-cyan-400/10 rounded-full blur-md group-hover:opacity-50 transition-opacity"></div>
+                          </div>
+
+                          <!-- SVG Definitions -->
+                          <svg class="absolute w-0 h-0">
+                            <defs>
+                              <linearGradient id="metalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#a1a1a1"/>
+                                <stop offset="30%" stop-color="#e2e2e2"/>
+                                <stop offset="70%" stop-color="#e2e2e2"/>
+                                <stop offset="100%" stop-color="#a1a1a1"/>
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                        </div>
+                        <span class="ml-2 text-xl font-bold text-gray-800">GWatch</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div id="auth-buttons" class="ml-4 flex items-center md:ml-6">
+                        <button onclick="showLoginForm()" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Login</button>
+                        <button onclick="showRegisterForm()" class="ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Register</button>
+                    </div>
+                    <div id="user-menu" class="ml-4 flex items-center md:ml-6 hidden">
+                        <div class="ml-3 relative">
+                            <div class="flex items-center">
+                                <div id="profile-pic" class="profile-pic w-8 h-8 rounded-full"></div>
+                                <span id="username-display" class="ml-2 text-sm font-medium text-gray-700"></span>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <br><br>
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Dynamic Content Area -->
+        <div id="content-area">
+            <!-- Default content will be loaded by app.js -->
+        </div>
+    </main>
+
+    <!-- Chatbot Icon -->
+    <div class="chatbot-icon" onclick="toggleChatbot()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container" class="chatbot-container">
+        <div class="chatbot-header">
+            GWatch Assistant
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages">
+            <div class="message bot-message">
+                Hello! How can I help you today?
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <div class="flex">
+                <input id="chatbot-input-field" type="text" class="flex-1 border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Type your message...">
+                <button onclick="sendChatMessage()" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offline Modal -->
+    <div id="offline-modal" class="offline-modal">
+        <div class="offline-modal-header">
+            <h3 class="text-lg font-semibold">Offline Mode</h3>
+            <button onclick="hideOfflineModal()" class="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="offline-modal-content">
+            <div class="flex flex-col items-center justify-center h-full text-center">
+                <div class="w-24 h-24 mb-6 text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">You're Offline</h2>
+                <p class="text-gray-600 mb-6 max-w-md">Some features may not be available. Your data will sync when you reconnect.</p>
+                <div class="w-full max-w-xs bg-gray-100 rounded-full h-2.5 mb-6">
+                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
+                </div>
+                <button onclick="hideOfflineModal()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="modal-backdrop" class="modal-backdrop" onclick="hideOfflineModal()"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+        // Offline Modal Control
+        function showOfflineModal() {
+            document.getElementById('offline-modal').classList.add('show');
+            document.getElementById('modal-backdrop').classList.add('show');
+        }
+        
+        function hideOfflineModal() {
+            document.getElementById('offline-modal').classList.remove('show');
+            document.getElementById('modal-backdrop').classList.remove('show');
+        }
+        
+        // Check connection status
+        window.addEventListener('offline', () => {
+            showOfflineModal();
+        });
+        
+        window.addEventListener('online', () => {
+            hideOfflineModal();
+            Toastify({
+                text: "Connection restored",
+                className: "toast-success",
+                duration: 3000
+            }).showToast();
+        });
+        
+        // Initial check
+        if (!navigator.onLine) {
+            showOfflineModal();
+        }
+        
+        // Chatbot Toggle
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot-container');
+            chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        function sendChatMessage() {
+            const input = document.getElementById('chatbot-input-field');
+            const messages = document.getElementById('chatbot-messages');
+            
+            if (input.value.trim() === '') return;
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user-message';
+            userMsg.textContent = input.value;
+            messages.appendChild(userMsg);
+            
+            // Add bot response
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot-message';
+                botMsg.textContent = "Thanks for your message! Our team will get back to you soon.";
+                messages.appendChild(botMsg);
+                messages.scrollTop = messages.scrollHeight;
+            }, 500);
+            
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+    <script src="form.js"></script>
+    <script src="ads.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

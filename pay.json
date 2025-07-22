@@ -1,0 +1,83 @@
+{
+  "ads": [
+    {
+      "id": "ad1",
+      "title": "Mobile Game Ad",
+      "description": "Watch this 30-second ad for a mobile game",
+      "image": "https://via.placeholder.com/300x200?text=Mobile+Game",
+      "reward": 50,
+      "duration": 30,
+      "active": true
+    },
+    {
+      "id": "ad2",
+      "title": "E-commerce Promo",
+      "description": "Learn about our latest deals and discounts",
+      "image": "https://via.placeholder.com/300x200?text=E-commerce",
+      "reward": 75,
+      "duration": 45,
+      "active": true
+    },
+    {
+      "id": "ad3",
+      "title": "Financial Service",
+      "description": "Discover our new financial products",
+      "image": "https://via.placeholder.com/300x200?text=Finance",
+      "reward": 100,
+      "duration": 60,
+      "active": true
+    }
+  ],
+  "payments": [
+    {
+      "name": "John Doe",
+      "amount": 1200,
+      "date": "2023-06-15T10:30:00Z"
+    },
+    {
+      "name": "Jane Smith",
+      "amount": 1500,
+      "date": "2023-06-15T11:45:00Z"
+    },
+    {
+      "name": "Michael Johnson",
+      "amount": 2000,
+      "date": "2023-06-14T09:15:00Z"
+    },
+    {
+      "name": "Sarah Williams",
+      "amount": 1800,
+      "date": "2023-06-14T14:20:00Z"
+    },
+    {
+      "name": "David Brown",
+      "amount": 2500,
+      "date": "2023-06-13T16:45:00Z"
+    },
+    {
+      "name": "Emily Davis",
+      "amount": 3000,
+      "date": "2023-06-13T12:30:00Z"
+    },
+    {
+      "name": "Robert Wilson",
+      "amount": 1700,
+      "date": "2023-06-12T15:10:00Z"
+    },
+    {
+      "name": "Jennifer Taylor",
+      "amount": 2200,
+      "date": "2023-06-12T10:20:00Z"
+    },
+    {
+      "name": "William Anderson",
+      "amount": 1900,
+      "date": "2023-06-11T13:45:00Z"
+    },
+    {
+      "name": "Elizabeth Thomas",
+      "amount": 2800,
+      "date": "2023-06-11T11:30:00Z"
+    }
+  ]
+}
